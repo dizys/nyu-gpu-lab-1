@@ -3,6 +3,9 @@
 #include <time.h>
 #include <cuda.h>
 
+#define BLOCK_NUM 4
+#define BLOCK_SIZE 500
+
 #define RANGE 19.87
 
 /*** Declaration of the kernel function below this line ***/
@@ -90,8 +93,8 @@ int main(int argc, char *argv[])
 	start = clock();
 
 	// Call the kernel function
-	dim3 grid_size(ceil(n / 256.0), 1, 1);
-	dim3 block_size(256, 1, 1);
+	dim3 grid_size(BLOCK_NUM, 1, 1);
+	dim3 block_size(BLOCK_SIZE, 1, 1);
 	vecGPU<<<grid_size, block_size>>>(ad, bd, cd, n);
 
 	// Force host to wait on the completion of the kernel
@@ -130,8 +133,10 @@ int main(int argc, char *argv[])
 __global__ void vecGPU(float *a, float *b, float *c, int n)
 {
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
-	if (i < n)
+	int stride = ceil(n / (float)(blockDim.x * gridDim.x));
+
+	for (int j = i * stride; j < (i + 1) * stride && j < n; j++)
 	{
-		c[i] += a[i] * b[i];
+		c[j] += a[j] * b[j];
 	}
 }

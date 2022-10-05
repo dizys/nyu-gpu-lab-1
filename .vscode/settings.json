@@ -7,7 +7,7 @@
   "files.eol": "\n",
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
-  "cSpell.words": ["buildx", "CIMS", "CUDA", "multicore"],
+  "cSpell.words": ["buildx", "CIMS", "CUDA", "multicore", "vectorprog"],
   "[c]": {
     "editor.defaultFormatter": "ms-vscode.cpptools"
   }

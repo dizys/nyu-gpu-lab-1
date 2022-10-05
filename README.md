@@ -2,21 +2,14 @@
 
 NYU GPU Lab 1: Implement a vector processor in CUDA.
 
-## Getting Started
+## Build
 
-### Switch Modules on CIMS Machines
+Using cmake to build the project:
 
-```bash
-module load cmake-3
-module load cuda-11.4
-module load gcc-9.2
-
-```
-
-### Build
+````bash
 
 ```bash
-mkdir -p cmake-build-release
-cmake -B cmake-build-release -DCMAKE_BUILD_TYPE=Release
-cmake --build cmake-build-release --config Release
-```
+make
+````
+
+An executable named `vectorprog` will be generated under the project root directory.

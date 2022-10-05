@@ -95,7 +95,8 @@ int main(int argc, char *argv[])
 	// Call the kernel function
 	dim3 grid_size(BLOCK_NUM, 1, 1);
 	dim3 block_size(BLOCK_SIZE, 1, 1);
-	vecGPU<<<grid_size, block_size>>>(ad, bd, cd, n);
+	int stride = ceil(n / (float)(grid_size.x * block_size.x));
+	vecGPU<<<grid_size, block_size>>>(ad, bd, cd, n, stride);
 
 	// Force host to wait on the completion of the kernel
 	cudaDeviceSynchronize();
@@ -130,10 +131,9 @@ int main(int argc, char *argv[])
 
 /**** Write the kernel itself below this line *****/
 
-__global__ void vecGPU(float *a, float *b, float *c, int n)
+__global__ void vecGPU(float *a, float *b, float *c, int n, int stride)
 {
 	int i = blockIdx.x * blockDim.x + threadIdx.x;
-	int stride = ceil(n / (float)(blockDim.x * gridDim.x));
 
 	for (int j = i * stride; j < (i + 1) * stride && j < n; j++)
 	{

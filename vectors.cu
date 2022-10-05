@@ -3,7 +3,7 @@
 #include <time.h>
 #include <cuda.h>
 
-#define BLOCK_NUM 4
+#define BLOCK_NUM 8
 #define BLOCK_SIZE 500
 
 #define RANGE 19.87

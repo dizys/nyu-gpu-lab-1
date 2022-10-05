@@ -4,7 +4,7 @@ NYU GPU Lab 1: Implement a vector processor in CUDA.
 
 ## Build
 
-Using cmake to build the project:
+Using make to build the project:
 
 ````bash
 

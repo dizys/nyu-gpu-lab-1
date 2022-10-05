@@ -10,5 +10,8 @@
   "cSpell.words": ["buildx", "CIMS", "CUDA", "multicore", "vectorprog"],
   "[c]": {
     "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "[cuda-cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
   }
 }

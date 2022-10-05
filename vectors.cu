@@ -10,7 +10,7 @@
 
 /*** Declaration of the kernel function below this line ***/
 
-__global__ void vecGPU(float *a, float *b, float *c, int n);
+__global__ void vecGPU(float *a, float *b, float *c, int n, int stride);
 
 /**** end of the kernel declaration ***/
 

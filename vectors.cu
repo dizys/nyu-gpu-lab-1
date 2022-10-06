@@ -17,12 +17,12 @@ __global__ void vecGPU(float *a, float *b, float *c, int n, int stride);
 int main(int argc, char *argv[])
 {
 
-	int n = 0;					 // number of elements in the arrays
-	int i;							 // loop index
-	float *a, *b, *c;		 // The arrays that will be processed in the host.
-	float *temp;				 // array in host used in the sequential code.
-	float *ad, *bd, *cd; // The arrays that will be processed in the device.
-	clock_t start, end;	 // to meaure the time taken by a specific part of code
+	int n = 0;									// number of elements in the arrays
+	int i;											// loop index
+	float *a, *b, *c;						// The arrays that will be processed in the host.
+	float *temp;								// array in host used in the sequential code.
+	float *ad, *bd, *cd;				// The arrays that will be processed in the device.
+	struct timespec start, end; // to meaure the time taken by a specific part of code
 
 	if (argc != 2)
 	{
@@ -71,11 +71,15 @@ int main(int argc, char *argv[])
 	}
 
 	// The sequential part
-	start = clock();
+
+	clock_gettime(CLOCK_REALTIME, &start);
+
 	for (i = 0; i < n; i++)
 		temp[i] += a[i] * b[i];
-	end = clock();
-	printf("Total time taken by the sequential part = %lf\n", (double)(end - start) / CLOCKS_PER_SEC);
+
+	clock_gettime(CLOCK_REALTIME, &end);
+
+	printf("Total time taken by the sequential part = %lf\n", (double)(end.tv_sec - start.tv_sec) + (double)(end.tv_nsec - start.tv_nsec) / 1000000000);
 
 	/******************  The start GPU part: Do not modify anything in main() above this line  ************/
 	// The GPU part
@@ -90,7 +94,7 @@ int main(int argc, char *argv[])
 	cudaMemcpy(bd, b, n * sizeof(float), cudaMemcpyHostToDevice);
 	cudaMemcpy(cd, c, n * sizeof(float), cudaMemcpyHostToDevice);
 
-	start = clock();
+	clock_gettime(CLOCK_REALTIME, &start);
 
 	// Call the kernel function
 	dim3 grid_size(BLOCK_NUM, 1, 1);
@@ -101,7 +105,7 @@ int main(int argc, char *argv[])
 	// Force host to wait on the completion of the kernel
 	cudaDeviceSynchronize();
 
-	end = clock();
+	clock_gettime(CLOCK_REALTIME, &end);
 
 	// Copy the result from the device to the host
 	cudaMemcpy(c, cd, n * sizeof(float), cudaMemcpyDeviceToHost);
@@ -111,7 +115,7 @@ int main(int argc, char *argv[])
 	cudaFree(bd);
 	cudaFree(cd);
 
-	printf("Total time taken by the GPU part = %lf\n", (double)(end - start) / CLOCKS_PER_SEC);
+	printf("Total time taken by the GPU part = %lf\n", (double)(end.tv_sec - start.tv_sec) + (double)(end.tv_nsec - start.tv_nsec) / 1000000000);
 	/******************  The end of the GPU part: Do not modify anything in main() below this line  ************/
 
 	// Checking the correctness of the GPU part

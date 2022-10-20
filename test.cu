@@ -18,7 +18,6 @@ int main(int argc, char *argv[])
 {
   int i;                          // loop index
   float *result;                  // The arrays that will be processed in the host.
-  float *temp;                    // array in host used in the sequential code.
   float *resultd;                 // The arrays that will be processed in the device.
   struct timespec start, end;     // to meaure the time taken by a specific part of code
   int n = BLOCK_NUM * BLOCK_SIZE; // size of the array
@@ -35,7 +34,7 @@ int main(int argc, char *argv[])
   srand((unsigned int)time(NULL));
   for (i = 0; i < n; i++)
   {
-    resultd[i] = 0.0;
+    result[i] = 0.0;
   }
 
   /******************  The start GPU part: Do not modify anything in main() above this line  ************/
@@ -52,7 +51,7 @@ int main(int argc, char *argv[])
   // Call the kernel function
   dim3 grid_size(BLOCK_NUM, 1, 1);
   dim3 block_size(BLOCK_SIZE, 1, 1);
-  vecGPU<<<grid_size, block_size>>>(resultd);
+  kernel<<<grid_size, block_size>>>(resultd);
 
   // Force host to wait on the completion of the kernel
   cudaDeviceSynchronize();
